@@ -72,7 +72,7 @@ public class Temperature implements Serializable {
     private Timestamp loggedTime;
     
     public void Temperature(double ambientTemperature, double ambientHumidity, double targetTemperature, 
-            double outsideTemperature, double outsideHumidity, String hvacMode, String hvacState, boolean hasLeaf, String currentWeather) {
+            double outsideTemperature, double outsideHumidity, String hvacMode, String hvacState, boolean hasLeaf, String currentWeather, Timestamp loggedTime) {
         this.ambientTemperature = ambientTemperature;
         this.ambientHumidity = ambientHumidity;
         this.targetTemperature = targetTemperature;
@@ -82,7 +82,7 @@ public class Temperature implements Serializable {
         this.hvacState = hvacState;
         this.hasLeaf = hasLeaf;
         this.currentWeather = currentWeather;
-        this.loggedTime = new Timestamp(System.currentTimeMillis());
+        this.loggedTime = loggedTime;
     }
 
     public Long getId() { return id; }

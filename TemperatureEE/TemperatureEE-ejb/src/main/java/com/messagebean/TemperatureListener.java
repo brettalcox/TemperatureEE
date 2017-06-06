@@ -8,6 +8,8 @@ package com.messagebean;
 import com.temp.TemperatureBeanLocal;
 import com.temp.impl.TemperatureBean;
 import com.temp.model.Temperature;
+
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,6 +55,7 @@ public class TemperatureListener implements MessageListener {
                 newInterval.setHvacState(messageHashMap.get("hvac_state"));
                 newInterval.setHasLeaf(Boolean.parseBoolean(messageHashMap.get("has_leaf")));
                 newInterval.setCurrentWeather(messageHashMap.get("current_weather"));
+                newInterval.setLoggedTime(new Timestamp(System.currentTimeMillis()));
 
                 temperatureBean.logInterval(newInterval);
 
