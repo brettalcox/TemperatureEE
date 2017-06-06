@@ -23,10 +23,8 @@ public class TemperatureClient {
     
     public static final short MAX_RETRIES = 3;
     
-    private short currentNestRetries = 0;
-    
-    private short currentWundergroundRetries = 0;
-    
+    private boolean retry = true;
+        
     public void TemperatureClient() {
 
     }
@@ -43,16 +41,21 @@ public class TemperatureClient {
             conn.setRequestProperty("Authorization", "Bearer " + System.getProperty("nest_token"));
             BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             
-            if(conn.getResponseCode() <= 300) {
-                String line;
-                result = new StringBuilder();
-                while ((line = rd.readLine()) != null) {
-                    result.append(line);
-                }
-            } else {
-                if(currentNestRetries != MAX_RETRIES) {
-                    currentNestRetries++;
-                    retrieveNestData(urlToRead);
+            short retries = 0;
+            while(retry) {
+                if(conn.getResponseCode() <= 300) {
+                    String line;
+                    result = new StringBuilder();
+                    while ((line = rd.readLine()) != null) {
+                        result.append(line);
+                    }
+                    retry = false;
+                } else {
+                    if(retries != MAX_RETRIES) {
+                        retries++;
+                    } else {
+                        retry = false;
+                    }
                 }
             }
 
@@ -79,7 +82,7 @@ public class TemperatureClient {
     }
 
     public WundergroundObject retrieveWundergroundData(String urlToRead) {
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = null;
 
         try {
             URL url = null;
@@ -89,16 +92,21 @@ public class TemperatureClient {
             conn.setRequestProperty("content-type", "application/json");
             BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-            if(conn.getResponseCode() <= 300) {
-                String line;
-                result = new StringBuilder();
-                while ((line = rd.readLine()) != null) {
-                    result.append(line);
-                }
-            } else {
-                if(currentWundergroundRetries != MAX_RETRIES) {
-                    currentWundergroundRetries++;
-                    retrieveNestData(urlToRead);
+            short retries = 0;
+            while(retry) {
+                if(conn.getResponseCode() <= 300) {
+                    String line;
+                    result = new StringBuilder();
+                    while ((line = rd.readLine()) != null) {
+                        result.append(line);
+                    }
+                    retry = false;
+                } else {
+                    if(retries != MAX_RETRIES) {
+                        retries++;
+                    } else {
+                        retry = false;
+                    }
                 }
             }
                         

@@ -7,10 +7,12 @@ package com.temp.impl;
 import com.bean.AbstractBean;
 import com.temp.TemperatureBeanLocal;
 import com.temp.model.Temperature;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -33,6 +35,14 @@ public class TemperatureBean extends AbstractBean implements TemperatureBeanLoca
             return "Interval created.";
         }
         return "Unable to create interval.";
+    }
+
+    @Override
+    public List<Temperature> getTemperatureByInterval() {
+        TypedQuery<Temperature> query = getEntityManager().createNamedQuery("Temperature.findAll", Temperature.class);
+        List<Temperature> results = query.getResultList();
+        
+        return results;
     }
 
 }

@@ -6,6 +6,7 @@
 package com.temp;
 
 import com.temp.model.Temperature;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -16,4 +17,6 @@ import javax.ejb.Local;
 public interface TemperatureBeanLocal {
     
     public String logInterval(Temperature temperature);
+    
+    public List<Temperature> getTemperatureByInterval();
 }
