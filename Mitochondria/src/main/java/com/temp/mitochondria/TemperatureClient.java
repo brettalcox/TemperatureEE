@@ -23,8 +23,10 @@ public class TemperatureClient {
     
     public static final short MAX_RETRIES = 3;
     
-    private boolean retry = true;
-        
+    private boolean nestRetry = true;
+
+    private boolean WundergroundRetry = true;
+
     public void TemperatureClient() {
 
     }
@@ -42,19 +44,19 @@ public class TemperatureClient {
             BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             
             short retries = 0;
-            while(retry) {
+            while(nestRetry) {
                 if(conn.getResponseCode() <= 300) {
                     String line;
                     result = new StringBuilder();
                     while ((line = rd.readLine()) != null) {
                         result.append(line);
                     }
-                    retry = false;
+                    nestRetry = false;
                 } else {
                     if(retries != MAX_RETRIES) {
                         retries++;
                     } else {
-                        retry = false;
+                        nestRetry = false;
                     }
                 }
             }
@@ -93,19 +95,19 @@ public class TemperatureClient {
             BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
             short retries = 0;
-            while(retry) {
+            while(WundergroundRetry) {
                 if(conn.getResponseCode() <= 300) {
                     String line;
                     result = new StringBuilder();
                     while ((line = rd.readLine()) != null) {
                         result.append(line);
                     }
-                    retry = false;
+                    WundergroundRetry = false;
                 } else {
                     if(retries != MAX_RETRIES) {
                         retries++;
                     } else {
-                        retry = false;
+                        WundergroundRetry = false;
                     }
                 }
             }

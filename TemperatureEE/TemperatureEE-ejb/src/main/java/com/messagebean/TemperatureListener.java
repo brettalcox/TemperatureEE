@@ -42,6 +42,7 @@ public class TemperatureListener implements MessageListener {
                 ObjectMessage objectMessage = (ObjectMessage) message;
                 HashMap<String, String> messageHashMap = (HashMap<String, String>) objectMessage.getObject();
                 Temperature newInterval = new Temperature();
+                System.out.println(messageHashMap);
 
                 newInterval.setAmbientTemperature(Double.parseDouble(messageHashMap.get("ambient_temperature")));
                 newInterval.setAmbientHumidity(Double.parseDouble(messageHashMap.get("ambient_humidity")));
