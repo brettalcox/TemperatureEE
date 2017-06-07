@@ -38,9 +38,17 @@ public class TemperatureBean extends AbstractBean implements TemperatureBeanLoca
     }
 
     @Override
-    public List<Temperature> getTemperatureByInterval() {
+    public List<Temperature> getAllIntervals() {
         TypedQuery<Temperature> query = getEntityManager().createNamedQuery("Temperature.findAll", Temperature.class);
         List<Temperature> results = query.getResultList();
+        
+        return results;
+    }
+
+    @Override
+    public List<Temperature> getLastDayIntervals() {
+        TypedQuery<Temperature> query = getEntityManager().createNamedQuery("Temperature.findAll", Temperature.class);
+        List<Temperature> results = query.setMaxResults(96).getResultList();
         
         return results;
     }

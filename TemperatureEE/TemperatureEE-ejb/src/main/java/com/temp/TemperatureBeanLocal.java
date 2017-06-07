@@ -18,5 +18,7 @@ public interface TemperatureBeanLocal {
     
     public String logInterval(Temperature temperature);
     
-    public List<Temperature> getTemperatureByInterval();
+    public List<Temperature> getAllIntervals();
+    
+    public List<Temperature> getLastDayIntervals();
 }

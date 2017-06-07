@@ -22,7 +22,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="temperature", schema="temperature")
-@NamedQuery(name="Temperature.findAll", query="SELECT o from Temperature o")
+@NamedQuery(name="Temperature.findAll", query="SELECT o FROM Temperature o ORDER BY o.loggedTime DESC")
 public class Temperature implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -39,7 +39,14 @@ public class TemperatureResource {
     @Path("/intervals/data.json")
     @GET
     @Produces("application/json")
-    public List<Temperature> getTemperatureByInterval() {
-        return temperatureBean.getTemperatureByInterval();
+    public List<Temperature> getAllIntervals() {
+        return temperatureBean.getAllIntervals();
+    }
+    
+    @Path("/intervals/day/data.json")
+    @GET
+    @Produces("application/json")
+    public List<Temperature> getLastDayIntervals() {
+        return temperatureBean.getLastDayIntervals();
     }
 }
