@@ -36,32 +36,12 @@ public class Temperature implements Serializable {
     private double ambientTemperature;
     
     @JsonProperty
-    @Column(name="ambient_humidity")
-    private double ambientHumidity;
-    
-    @JsonProperty
     @Column(name="target_temperature")
     private double targetTemperature;
     
     @JsonProperty
     @Column(name="outside_temperature")
     private double outsideTemperature;
-    
-    @JsonProperty
-    @Column(name="outside_humidity")
-    private double outsideHumidity;
-    
-    @JsonProperty
-    @Column(name="hvac_mode")
-    private String hvacMode;
-    
-    @JsonProperty
-    @Column(name="hvac_state")
-    private String hvacState;
-    
-    @JsonProperty
-    @Column(name="has_leaf")
-    private boolean hasLeaf;
     
     @JsonProperty
     @Column(name="current_weather")
@@ -71,16 +51,11 @@ public class Temperature implements Serializable {
     @Column(name="logged_time")
     private Timestamp loggedTime;
     
-    public void Temperature(double ambientTemperature, double ambientHumidity, double targetTemperature, 
-            double outsideTemperature, double outsideHumidity, String hvacMode, String hvacState, boolean hasLeaf, String currentWeather, Timestamp loggedTime) {
+    public void Temperature(double ambientTemperature, double targetTemperature, 
+            double outsideTemperature, String currentWeather, Timestamp loggedTime) {
         this.ambientTemperature = ambientTemperature;
-        this.ambientHumidity = ambientHumidity;
         this.targetTemperature = targetTemperature;
         this.outsideTemperature = outsideTemperature;
-        this.outsideHumidity = outsideHumidity;
-        this.hvacMode = hvacMode;
-        this.hvacState = hvacState;
-        this.hasLeaf = hasLeaf;
         this.currentWeather = currentWeather;
         this.loggedTime = loggedTime;
     }
@@ -88,20 +63,10 @@ public class Temperature implements Serializable {
     public Long getId() { return id; }
     
     public double getAmbientTemperature() { return ambientTemperature; }
-    
-    public double getAmbientHumidity() { return ambientHumidity; }
-    
+        
     public double getTargetTemperature() { return targetTemperature; }
 
     public double getOutsideTemperature() { return outsideTemperature; }
-    
-    public double getOutsideHumidity() { return outsideHumidity; }
-
-    public String getHvacMode() { return hvacMode; }
-    
-    public String getHvacState() { return hvacState; }
-    
-    public boolean getHasLeaf() { return hasLeaf; }
     
     public String getCurrentWeather() { return currentWeather; }
     
@@ -109,10 +74,6 @@ public class Temperature implements Serializable {
     
     public void setAmbientTemperature(double ambientTemperature) {
         this.ambientTemperature = ambientTemperature;
-    }
-    
-    public void setAmbientHumidity(double ambientHumidity) {
-        this.ambientHumidity = ambientHumidity;
     }
     
     public void setTargetTemperature(double targetTemperature) {
@@ -123,22 +84,6 @@ public class Temperature implements Serializable {
         this.outsideTemperature = outsideTemperature;
     }
     
-    public void setOutsideHumidity(double outsideHumidity) {
-        this.outsideHumidity = outsideHumidity;
-    }
-    
-    public void setHvacMode(String hvacMode) {
-        this.hvacMode = hvacMode;
-    }
-    
-    public void setHvacState(String hvacState) {
-        this.hvacState = hvacState;
-    }
-    
-    public void setHasLeaf(boolean hasLeaf) {
-        this.hasLeaf = hasLeaf;
-    }
-    
     public void setCurrentWeather(String currentWeather) {
         this.currentWeather = currentWeather;
     }
@@ -146,7 +91,6 @@ public class Temperature implements Serializable {
     public void setLoggedTime(Timestamp loggedTime) {
         this.loggedTime = loggedTime;
     }
-
 
     @Override
     public int hashCode() {

@@ -5,9 +5,8 @@
  */
 package com.messagebean;
 
-import com.temp.TemperatureBeanLocal;
-import com.temp.model.Temperature;
-
+import com.temp.HumidityBeanLocal;
+import com.temp.model.Humidity;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -19,43 +18,40 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 /**
  *
  * @author brettalcox
  */
-@MessageDriven(name = "temperaturemdb", activationConfig = {
-    @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "jms/TEMPQUEUE"),
+@MessageDriven(name = "humiditymdb", activationConfig = {
+    @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "jms/HUMIDQUEUE"),
     @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-    @ActivationConfigProperty(propertyName = "destination", propertyValue = "TEMPQUEUE"),
+    @ActivationConfigProperty(propertyName = "destination", propertyValue = "HUMIDQUEUE"),
     @ActivationConfigProperty(propertyName = "resourceAdapter", propertyValue = "activemq-rar-5.14.5")
    
 })
-public class TemperatureListener implements MessageListener {
+public class HumidityListener implements MessageListener {
 
     @EJB
-    TemperatureBeanLocal temperatureBean;
-            
+    HumidityBeanLocal humidityBean;
+    
     @Override
     public void onMessage(Message message) {
         try {
             if (message != null && message instanceof ObjectMessage) {
                 ObjectMessage objectMessage = (ObjectMessage) message;
                 HashMap<String, String> messageHashMap = (HashMap<String, String>) objectMessage.getObject();
-                Temperature newInterval = new Temperature();
+                Humidity newInterval = new Humidity();
 
-                newInterval.setAmbientTemperature(Double.parseDouble(messageHashMap.get("ambient_temperature")));
-                newInterval.setTargetTemperature(Double.parseDouble(messageHashMap.get("target_temperature")));
-                newInterval.setOutsideTemperature(Double.parseDouble(messageHashMap.get("outside_temperature")));
-                newInterval.setCurrentWeather(messageHashMap.get("current_weather"));
+                newInterval.setAmbientHumidity(Double.parseDouble(messageHashMap.get("ambient_humidity")));
+                newInterval.setOutsideHumidity(Double.parseDouble(messageHashMap.get("outside_humidity")));
                 newInterval.setLoggedTime(Timestamp.valueOf(messageHashMap.get("logged_time")));
 
-                temperatureBean.logInterval(newInterval);
+                humidityBean.logInterval(newInterval);
 
             }
         } catch(JMSException e) {
-            Logger.getLogger(TemperatureListener.class.getName()).log(Level.SEVERE, null, e);
-        }
-    } 
+            Logger.getLogger(HumidityListener.class.getName()).log(Level.SEVERE, null, e);
+        }    
+    }
 }

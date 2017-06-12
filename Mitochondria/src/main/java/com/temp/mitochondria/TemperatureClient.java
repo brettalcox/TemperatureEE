@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import org.json.JSONObject;
 
@@ -23,9 +24,9 @@ public class TemperatureClient {
     
     public static final short MAX_RETRIES = 3;
     
-    private boolean nestRetry = true;
+    private short nestRetries = 0;
 
-    private boolean WundergroundRetry = true;
+    private short wundergroundRetries = 0;
 
     public void TemperatureClient() {
 
@@ -41,27 +42,21 @@ public class TemperatureClient {
             conn.setRequestMethod("GET");
             conn.setRequestProperty("content-type", "application/json");
             conn.setRequestProperty("Authorization", "Bearer " + System.getProperty("nest_token"));
-            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             
-            short retries = 0;
-            while(nestRetry) {
+            retry: while(nestRetries != MAX_RETRIES) {
+                BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 if(conn.getResponseCode() <= 300) {
                     String line;
                     result = new StringBuilder();
                     while ((line = rd.readLine()) != null) {
                         result.append(line);
                     }
-                    nestRetry = false;
-                } else {
-                    if(retries != MAX_RETRIES) {
-                        retries++;
-                    } else {
-                        nestRetry = false;
-                    }
+                    break retry;
                 }
+                nestRetries++;
+                rd.close();
             }
 
-            rd.close();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (ProtocolException e) {
@@ -92,27 +87,21 @@ public class TemperatureClient {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("content-type", "application/json");
-            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-            short retries = 0;
-            while(WundergroundRetry) {
+            retry: while(wundergroundRetries != MAX_RETRIES) {
+                BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 if(conn.getResponseCode() <= 300) {
                     String line;
                     result = new StringBuilder();
                     while ((line = rd.readLine()) != null) {
                         result.append(line);
                     }
-                    WundergroundRetry = false;
-                } else {
-                    if(retries != MAX_RETRIES) {
-                        retries++;
-                    } else {
-                        WundergroundRetry = false;
-                    }
+                    break retry;
                 }
+                wundergroundRetries++;
+                rd.close();
             }
                         
-            rd.close();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (ProtocolException e) {
@@ -136,14 +125,40 @@ public class TemperatureClient {
 
         if (nestObject != null && wundergroundObject != null) {
             messageObject.put("ambient_temperature", Double.toString(nestObject.getAmbientTemperature()));
-            messageObject.put("ambient_humidity", Double.toString(nestObject.getAmbientHumidity()));
             messageObject.put("target_temperature", Double.toString(nestObject.getTargetTemperature()));
+            messageObject.put("outside_temperature", Double.toString(wundergroundObject.getOutsideTemperature()));
+            messageObject.put("current_weather", wundergroundObject.getCurrentWeather());
+            messageObject.put("logged_time", new Timestamp(System.currentTimeMillis()).toString());
+        } else {
+            return null;
+        }
+
+        return messageObject;
+    }
+    
+    public HashMap<String, String> packageHumidityData(NestObject nestObject, WundergroundObject wundergroundObject) {
+        HashMap<String, String> messageObject = new HashMap<String, String>();
+
+        if (nestObject != null && wundergroundObject != null) {
+            messageObject.put("ambient_humidity", Double.toString(nestObject.getAmbientHumidity()));
+            messageObject.put("outside_humidity", wundergroundObject.getOutsideHumidity());
+            messageObject.put("logged_time", new Timestamp(System.currentTimeMillis()).toString());
+        } else {
+            return null;
+        }
+
+        return messageObject;
+    }
+    
+        public HashMap<String, String> packageHvacData(NestObject nestObject, WundergroundObject wundergroundObject) {
+        HashMap<String, String> messageObject = new HashMap<String, String>();
+
+        if (nestObject != null && wundergroundObject != null) {
             messageObject.put("hvac_mode", nestObject.getHvacMode());
             messageObject.put("hvac_state", nestObject.getHvacState());
             messageObject.put("has_leaf", Boolean.toString(nestObject.getHasLeaf()));
-            messageObject.put("outside_temperature", Double.toString(wundergroundObject.getOutsideTemperature()));
-            messageObject.put("outside_humidity", wundergroundObject.getOutsideHumidity());
             messageObject.put("current_weather", wundergroundObject.getCurrentWeather());
+            messageObject.put("logged_time", new Timestamp(System.currentTimeMillis()).toString());
         } else {
             return null;
         }

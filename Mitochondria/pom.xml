@@ -44,7 +44,7 @@
                         <manifest>
                             <!--addClasspath>true</-addClasspath>
                             <classpathPrefix>lib/</classpathPrefix-->
-                            <mainClass>com.temp.mitochondria.TemperatureInterval</mainClass>
+                            <mainClass>com.temp.mitochondria.DataInterval</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -5,16 +5,11 @@
  */
 package com.temp.mitochondria;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.jms.JMSException;
-import javax.naming.NamingException;
-
 /**
  *
  * @author brettalcox
  */
-public class TemperatureInterval {
+public class DataInterval {
     public static void main(String[] args) {
         Thread thread = new Thread(){
             public void run(){
@@ -28,6 +23,14 @@ public class TemperatureInterval {
                         MQFactory mqFactory = new MQFactory();
                         mqFactory.init("TEMPQUEUE");
                         mqFactory.sendMessage(temperatureClient.packageTemperatureData(nestObject, wundergroundObject));
+                        mqFactory.destroy();
+                        
+                        mqFactory.init("HUMIDQUEUE");
+                        mqFactory.sendMessage(temperatureClient.packageHumidityData(nestObject, wundergroundObject));
+                        mqFactory.destroy();
+                        
+                        mqFactory.init("HVACQUEUE");
+                        mqFactory.sendMessage(temperatureClient.packageHvacData(nestObject, wundergroundObject));
                         mqFactory.destroy();
 
                         Thread.sleep(1000 * 60 * 15);
